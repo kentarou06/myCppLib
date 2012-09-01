@@ -1,4 +1,3 @@
-
 list_file="include_source.txt"
 output="myLib.so"
 
@@ -10,5 +9,5 @@ do
 #    arg="${arg}-c ${file} "
 done
 
-echo "g++ -shared${arg} -o ${output} -fPIC"
-g++ -shared ${arg} -o ${output} -fPIC
+echo "g++ -shared${arg} -o ${output} -fPIC -Wall"
+g++ -shared ${arg} -o ${output} -fPIC -Wall
