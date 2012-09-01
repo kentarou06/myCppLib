@@ -11,23 +11,49 @@ int main(){
 }
 
 
+#include <cmath>
+const double PI=acos(-1);
 void test_io_cpp(){
-  char filename[] = "vaiueo2d.raw";
-  int n_Bytes = 2;
+  char filename[256] = "test00.raw"; //"vaiueo2d.raw";
+  int n_Bytes = 1;
   vector<wav_type> left, right;
 
+  // test for write()
   /*
-  cout << "MAIN" << endl;
-  cout << "null_vector : " << &null_vector
-       << " " << (long long)&null_vector
-       << "\tR: " << &right
-       << " " << (long long)&right
-       << endl << endl;;
+  int T = 10000;
+  for( int i=0;i<2*T;i++ ){
+    double rad = 2.0*PI*100.0*i /T;
+    left.push_back( 32767 * cos( rad ) );
+    right.push_back( 20000 * sin( rad ) );
+  }
+  for( n_Bytes=1;n_Bytes<=2;n_Bytes++ ){
+    filename[4] = n_Bytes + '0';
+    // mono
+    filename[5] = '1';
+    write( filename, n_Bytes, left );
+    // stereo
+    filename[5] = '2';
+    write( filename, n_Bytes, left, right );
+  }
   */
 
-  read( filename, n_Bytes, left, right );
-  read( filename, n_Bytes, left );
-
-  write( filename, n_Bytes, left, right );
-  write( filename, n_Bytes, left );
+  // test for read()
+  /*
+  for( n_Bytes=1;n_Bytes<=2;n_Bytes++ ){
+    filename[4] = n_Bytes + '0';
+    // mono
+    filename[5] = '1';
+    read( filename, n_Bytes, left );
+    cout << endl;
+    for( int i=0;i<(int)left.size() && i<1000;i++ )
+      cout << i << " " << left[i] << endl;
+    // stereo
+    filename[5] = '2';
+    read( filename, n_Bytes, left, right );
+    cout << endl;
+    for( int i=0;i<(int)left.size() && i<1000;i++ )
+      cout << i << " " << left[i] << " "
+	   << right[i] << endl;
+  }
+  */
 }
