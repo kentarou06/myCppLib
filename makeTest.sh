@@ -8,4 +8,5 @@ then
 fi
 
 echo "make test"
+echo "g++ test.cpp -o test ./${sharedLib} -Wall"
 g++ test.cpp -o test ./${sharedLib} -Wall

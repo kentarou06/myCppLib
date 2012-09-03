@@ -1,6 +1,7 @@
 #include <iostream>
 #include "speech/io/io.h"
 using namespace std;
+using namespace speech;
 
 void test_io_cpp();
 
@@ -19,7 +20,6 @@ void test_io_cpp(){
   vector<wav_type> left, right;
 
   // test for write()
-  /*
   int T = 10000;
   for( int i=0;i<2*T;i++ ){
     double rad = 2.0*PI*100.0*i /T;
@@ -30,30 +30,27 @@ void test_io_cpp(){
     filename[4] = n_Bytes + '0';
     // mono
     filename[5] = '1';
-    write( filename, n_Bytes, left );
+    io::write( filename, n_Bytes, left );
     // stereo
     filename[5] = '2';
-    write( filename, n_Bytes, left, right );
+    io::write( filename, n_Bytes, left, right );
   }
-  */
 
   // test for read()
-  /*
   for( n_Bytes=1;n_Bytes<=2;n_Bytes++ ){
     filename[4] = n_Bytes + '0';
     // mono
     filename[5] = '1';
-    read( filename, n_Bytes, left );
+    io::read( filename, n_Bytes, left );
     cout << endl;
     for( int i=0;i<(int)left.size() && i<1000;i++ )
       cout << i << " " << left[i] << endl;
     // stereo
     filename[5] = '2';
-    read( filename, n_Bytes, left, right );
+    io::read( filename, n_Bytes, left, right );
     cout << endl;
     for( int i=0;i<(int)left.size() && i<1000;i++ )
       cout << i << " " << left[i] << " "
 	   << right[i] << endl;
   }
-  */
 }
