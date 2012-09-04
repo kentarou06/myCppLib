@@ -10,7 +10,7 @@ namespace speech{
   vector<wav_type> null_vector;
 
   /* read *.raw */
-  bool io::read(char* filename, int n_Bytes,
+  bool io::read(const char* filename, const int n_Bytes,
 	    vector<wav_type> &left, vector<wav_type> &right){
 
     if( n_Bytes!=1 && n_Bytes!=2 ){
@@ -59,7 +59,7 @@ namespace speech{
   }
 
   /* write *.raw */
-  bool io::write(char* filename, int n_Bytes,
+  bool io::write(const char* filename, const int n_Bytes,
 		 const vector<wav_type> &left,
 		 const vector<wav_type> &right){
 

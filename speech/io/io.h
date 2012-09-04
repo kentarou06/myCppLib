@@ -28,12 +28,12 @@ namespace speech{
        WARNING
        before reading, left and right are done clear()
     */
-    static bool read(char* filename, int n_Bytes,
+    static bool read(const char* filename, const int n_Bytes,
 	      vector<wav_type> &left,
 	  vector<wav_type> &right=null_vector );
 
     /* write *.raw */
-    static bool write(char* filename, int n_Bytes,
+    static bool write(const char* filename, const int n_Bytes,
 	       const vector<wav_type> &left,
 	       const vector<wav_type> &right=null_vector );
   };
