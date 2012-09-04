@@ -1,9 +1,14 @@
 #include <iostream>
 #include "speech/io/io.h"
+#include "speech/fft/fft.h"
+#include <cmath>
 using namespace std;
 using namespace speech;
 
+const double PI=acos(-1);using namespace std;
+
 void test_io_cpp();
+void test_fft_cpp();
 
 int main(){
   test_io_cpp();
@@ -11,9 +16,10 @@ int main(){
   return 0;
 }
 
+void test_fft_cpp(){
 
-#include <cmath>
-const double PI=acos(-1);
+}
+
 void test_io_cpp(){
   char filename[256] = "test00.raw"; //"vaiueo2d.raw";
   int n_Bytes = 1;
