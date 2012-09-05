@@ -3,7 +3,7 @@
 #include <complex>
 #include <cmath>
 #include "../io/io.h"
-#include "fft.h"
+#include "dft.h"
 using namespace std;
 
 namespace speech{

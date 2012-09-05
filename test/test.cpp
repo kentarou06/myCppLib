@@ -3,7 +3,7 @@
 #include <complex>
 #include <cmath>
 #include "speech/io/io.h"
-#include "speech/fft/fft.h"
+#include "speech/dft/dft.h"
 #include "utility/utility.h"
 using namespace std;
 using namespace speech;
@@ -19,7 +19,8 @@ T tmp_TEST(T a, T b){
 }
 
 int main(){
-  test_io_cpp();
+  cout << "run test" << endl;
+  //  test_io_cpp();
   test_fft_cpp();
 
   return 0;
@@ -27,6 +28,8 @@ int main(){
 
 
 void test_fft_cpp(){
+  cout << "test_fft_cpp()" << endl;
+
   vector<complex<wav_type> > v;
   dft::cdft( v, true);
 }
