@@ -1,23 +1,29 @@
 #include <iostream>
+#include <vector>
+#include <complex>
+#include <cmath>
 #include "speech/io/io.h"
 #include "speech/fft/fft.h"
-#include <cmath>
+#include "utility/utility.h"
 using namespace std;
 using namespace speech;
 
-const double PI=acos(-1);using namespace std;
+const double PI=acos(-1);
 
 void test_io_cpp();
 void test_fft_cpp();
 
 int main(){
   test_io_cpp();
+  test_fft_cpp();
 
+  cout << utility::get_class_name(PI) << endl;
   return 0;
 }
 
 void test_fft_cpp(){
-
+  vector<complex<wav_type> > v;
+  dft::cdft( v, true);
 }
 
 void test_io_cpp(){

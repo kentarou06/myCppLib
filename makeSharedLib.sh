@@ -1,13 +1,27 @@
+
+nowDir=`pwd`
+cd ${HOME}/github/myCppLib
+
 list_file="include_source.txt"
-output="myLib.so"
+output="libmylib.so"
+MYLIB="${HOME}/github/myCppLib"
 
 files=`cat ${list_file}`
 arg=""
+objList=""
+i=0;
 for file in $files
 do
-    arg="${arg} ${file}"
-#    arg="${arg}-c ${file} "
+    objFile="obj${i}.o"
+    echo "g++ -fPIC -c $file -o ${objFile}"
+    g++ -fPIC -c $file -o ${objFile} -I${MYLIB}
+
+    objList="${objList} ${objFile}"
+    i=`expr $i + 1`
 done
 
-echo "g++ -shared${arg} -o ${output} -fPIC -Wall"
-g++ -shared ${arg} -o ${output} -fPIC -Wall
+echo "g++ -shared ${objList} -o ${output}"
+g++ -shared ${objList} -o ${output}
+#rm ${objList}
+
+cd ${nowDir}

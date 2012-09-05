@@ -11,6 +11,8 @@
 #include <vector>
 using namespace std;
 
+#ifndef READ_IO
+#define READ_IO
 namespace speech{
   /* variable type of samples */
   typedef double wav_type;
@@ -38,3 +40,4 @@ namespace speech{
 	       const vector<wav_type> &right=null_vector );
   };
 };
+#endif

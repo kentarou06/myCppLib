@@ -2,22 +2,18 @@
 
 echo ${CPP_OPT}
 
-sharedLib="myLib.so"
+sharedLib="libmyLib.so"
 
 if [ $# != 0 ]
 then
     echo "make shared library : ${sharedLib}"
-    sh makeSharedLib.sh
+    sh ../makeSharedLib.sh
     echo "*******************************************************************"
 fi
 
 echo "make test"
-echo "g++ test.cpp -o test ./${sharedLib} -Wall"
-#g++ test.cpp -o test ./${sharedLib} -Wall # success
 
-#g++ test.cpp -o test ${CPP_OPT} -Wall
-#g++ ${CPP_OPT} test.cpp -o test -Wall # failed
+MYLIB="${HOME}/github/myCppLib"
+echo "g++ -Wall test.cpp -I${MYLIB} -L${MYLIB} -lmylib -o test"
+g++ -Wall test.cpp -I${MYLIB} -L${MYLIB} -lmylib -o test
 
-
-#g++ -I/home/kyamada/github/myCppLib/ /home/kyamada/github/myCppLib/myLib.so test.cpp -o test -Wall
-g++ test.cpp -o test /home/kyamada/github/myCppLib/myLib.so -Wall
