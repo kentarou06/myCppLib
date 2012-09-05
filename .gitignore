@@ -4,4 +4,4 @@
 *.o
 *.so
 
-test
+test/

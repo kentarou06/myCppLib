@@ -8,10 +8,8 @@ using namespace std;
 
 namespace speech{
 
-  /*
   vector<int> dft::ip;
   vector<wav_type> dft::w;
-  */
 
   //  template <typename T>
   //  bool dft<T>::cdft(vector< complex<T> > x, const bool isIDFT ){

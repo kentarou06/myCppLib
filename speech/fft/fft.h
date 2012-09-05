@@ -10,7 +10,6 @@ namespace speech{
   class dft{
   private:
     static vector<int> ip;
-    //    static vector<T> w;
     static vector<wav_type> w;
 
     static void makewt(int nw, int *ip, double *w);

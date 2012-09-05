@@ -10,10 +10,11 @@ files=`cat ${list_file}`
 arg=""
 objList=""
 i=0;
+MYLIB="${HOME}/github/myCppLib"
 for file in $files
 do
     objFile="obj${i}.o"
-    echo "g++ -fPIC -c $file -o ${objFile}"
+    echo "g++ -fPIC -c $file -o ${objFile} -I${MYLIB}"
     g++ -fPIC -c $file -o ${objFile} -I${MYLIB}
 
     objList="${objList} ${objFile}"

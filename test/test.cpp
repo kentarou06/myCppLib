@@ -13,18 +13,24 @@ const double PI=acos(-1);
 void test_io_cpp();
 void test_fft_cpp();
 
+template <typename T>
+T tmp_TEST(T a, T b){
+  return a+b;
+}
+
 int main(){
   test_io_cpp();
   test_fft_cpp();
 
-  cout << utility::get_class_name(PI) << endl;
   return 0;
 }
+
 
 void test_fft_cpp(){
   vector<complex<wav_type> > v;
   dft::cdft( v, true);
 }
+
 
 void test_io_cpp(){
   char filename[256] = "test00.raw"; //"vaiueo2d.raw";
