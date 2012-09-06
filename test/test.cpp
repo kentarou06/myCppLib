@@ -2,6 +2,7 @@
 #include <vector>
 #include <complex>
 #include <cmath>
+#include <cstdio>
 #include "speech/io/io.h"
 #include "speech/dft/dft.h"
 #include "utility/utility.h"
@@ -30,8 +31,33 @@ int main(){
 void test_fft_cpp(){
   cout << "test_fft_cpp()" << endl;
 
-  vector<complex<wav_type> > v;
-  dft::cdft( v, true);
+  vector<complex<wav_type> > signal, spectram, inv;
+  const int SAMPLING_FREQUENCY = 44100;
+  const int WINDOW_SIZE = 1024;
+  const int PERIOD = SAMPLING_FREQUENCY;
+  const double f = 1000;
+
+  cout << "SIGNAL" << endl;
+  for( int i=0;i<WINDOW_SIZE;i++ ){
+    signal.push_back( 1.0 * cos( 2.0 * PI * f * i / PERIOD) );
+    printf("%2d | % 10.4lf % 10.4lf\n", i, signal[i].real(), signal[i].imag() );
+  }
+
+  spectram = dft::cdft( signal );
+  cout << endl << "SPECTROGRAM" << endl;
+  for( int i=0, len=WINDOW_SIZE/2 + 1; i<len;i++ ){
+    double freq = dft::convert_index_to_freq( i, WINDOW_SIZE, SAMPLING_FREQUENCY );
+    double re = spectram[i].real(), im = spectram[i].imag();
+    double amp = abs( spectram[i] );
+    double phs = arg( spectram[i] );
+    printf( "%7.1lf | % 10.4lf % 10.4lf\t|  % 10.4lf % 10.4lf\n", freq, re, im, amp, phs);
+  }
+
+  inv = dft::cdft( spectram, true );
+  cout << endl << "INVERSE" << endl;
+  for( int i=0;i<(int)inv.size();i++ )
+    printf("%2d | % 10.4lf % 10.4lf\n", i, inv[i].real(), inv[i].imag() );
+
 }
 
 
