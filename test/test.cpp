@@ -3,8 +3,9 @@
 #include <complex>
 #include <cmath>
 #include <cstdio>
-#include "speech/io/io.h"
 #include "speech/dft/dft.h"
+#include "speech/io/io.h"
+#include "speech/lpc/lpc.h"
 #include "utility/utility.h"
 using namespace std;
 using namespace speech;
@@ -13,6 +14,7 @@ const double PI=acos(-1);
 
 void test_io_cpp();
 void test_fft_cpp();
+void test_lpc_cpp();
 
 template <typename T>
 T tmp_TEST(T a, T b){
@@ -22,11 +24,15 @@ T tmp_TEST(T a, T b){
 int main(){
   cout << "run test" << endl;
   //  test_io_cpp();
-  test_fft_cpp();
+  //  test_fft_cpp();
+  test_lpc_cpp();
 
   return 0;
 }
 
+void test_lpc_cpp(){
+
+}
 
 void test_fft_cpp(){
   cout << "test_fft_cpp()" << endl;

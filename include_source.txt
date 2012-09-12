@@ -1,3 +1,4 @@
-speech/io/io.cpp
 speech/dft/dft.cpp
+speech/io/io.cpp
+speech/lpc/lpc.cpp
 utility/utility.cpp
