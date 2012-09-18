@@ -5,3 +5,6 @@
 *.so
 
 test/
+
+
+headerfile.h
