@@ -26,3 +26,6 @@ g++ -shared ${objList} -o ${output}
 #rm ${objList}
 
 cd ${nowDir}
+
+echo "making headerfile.h ... "
+sh findHeader.sh
