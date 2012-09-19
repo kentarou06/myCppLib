@@ -31,6 +31,59 @@ int main(){
 }
 
 void test_lpc_cpp(){
+  char filename[256] = "../vaiueo2d.raw";
+  vector<wav_type> left;
+  int n_Bytes = 2;
+  LPC lpc;
+
+  if( !io::read( filename, n_Bytes, left ) ){
+    cout << "failed to reading file : " << filename << endl;
+    return ;
+  }
+
+  int samplingRate = 22050;
+  int windowSize = samplingRate * 40 / 1000;
+  int shiftSize  = windowSize / 2;  // half shift
+  int p = 24;
+  /*
+  cout << "sampleSize : " << left.size() << endl
+       << "windowSize : " << windowSize << endl
+       << "shiftSize  : " << shiftSize << endl;
+  */
+  vector<wav_type> parcor, lp;
+  for( int i=0,frame=0;i+windowSize < (int)left.size();i+=shiftSize,frame++ ){
+    vector<wav_type> sig(windowSize);
+    for( int j=0;j<windowSize;j++ )
+      sig.push_back( left[i+j] );
+    lpc.setSignal( sig );
+    lpc.analysis( p );
+
+    /*
+    lpc.getLPC( lp );
+    lpc.getPARCOR( parcor );
+
+    cout << endl << "FRAME " << frame << endl;
+    cout << "index\tlpc\tparcor" << endl;
+    for( int i=0;i<10;i++ )
+      cout << i << "\t" << lp[i] << "\t" << parcor[i] << endl;
+    */
+
+    vector<wav_type> spec;
+    int fftSize = 512;
+    lpc.getSpectral( spec, fftSize );
+
+    cout << "FRAME : " << frame << endl;
+    for( int i=0;i<fftSize;i++ ){
+      double freq = dft::convert_index_to_freq( i,
+					   2*fftSize,
+					   samplingRate );
+      cout << freq << "\t" << spec[i] << endl;
+    }
+    cout << endl;
+
+    cout << "input integer : ";
+    cin >> fftSize;
+  }
 
 }
 
