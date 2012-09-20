@@ -18,6 +18,9 @@ namespace speech{
     setSamplingFrequency(sampling_freq);
     setShiftMSec(shift_msec);
     setWindowMSec(window_msec);
+
+    // default, do not preemphasis
+    defaultAlphaForPreEmphasis = -1.0;
   }
 
   /* run main loop */
@@ -36,11 +39,12 @@ namespace speech{
       }
     }
 
+    preEmphasis( left, right );
+
     const int shiftSize  = getNShiftSamples();
     const int windowSize = getNWindowSamples();
-    vector<wav_type> lSeg(windowSize), rSeg;
+    vector<wav_type> lSeg( windowSize ), rSeg;
     if( isStereo ) rSeg.resize( windowSize );
-
     for( int i=0,frame=0; i+windowSize<(int)left.size();i+=shiftSize,frame++){
       for( int j=0;j<windowSize;j++ ){
 	lSeg[j] = left[i+j];
@@ -52,10 +56,29 @@ namespace speech{
   }
 
   /* this method should be inherited */
-  void frame::oneOfFrame(int &frame,
+  void frame::oneOfFrame(const int &frame,
 		  vector<wav_type> &left,
 		  vector<wav_type> &right ){
-    // do nothing ( virtual method )
+    // do nothing because this is virtual method
+  }
+
+  void frame::preEmphasis( vector<wav_type> &left,
+			   vector<wav_type> &right ){
+    if( defaultAlphaForPreEmphasis < 0.0 ||
+	defaultAlphaForPreEmphasis > 1.0 )
+      return;
+
+    int len=left.size()-1;
+    for( int i=0;i<len;i++ ){
+      left[i] = left[i+1]
+	- defaultAlphaForPreEmphasis * left[i];
+      if( isStereo )
+	right[i] = right[i+1]
+	  - defaultAlphaForPreEmphasis * right[i];
+    }
+    left.resize( len );
+    if( isStereo )
+      right.resize( len );
   }
 
   /*  getter */
@@ -69,6 +92,9 @@ namespace speech{
   int frame::getWindowMSec(){ return window_msec; }
   int frame::getNShiftSamples(){ return sampling_freq * shift_msec / 1000; }
   int frame::getNWindowSamples(){ return sampling_freq * window_msec / 1000; }
+  double frame::getDefaultAlphaForPreEmphasis(){
+    return defaultAlphaForPreEmphasis;
+  }
 
   int frame::getMSec(const int frame){
     return frame * getNShiftSamples() * 1000 / sampling_freq;
@@ -100,5 +126,8 @@ namespace speech{
   }
   void frame::setWindowMSec(const int window_msec){
     this->window_msec = window_msec;
+  }
+  void frame::setDefaultAlphaForPreEmphasis(const double alpha){
+    defaultAlphaForPreEmphasis = alpha;
   }
 }

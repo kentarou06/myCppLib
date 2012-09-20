@@ -38,7 +38,7 @@ public:
 	       const int window_msec,
 	       const int n_Bytes = 2,
 	       const bool isStereo = false );
-  void oneOfFrame(int &frame,
+  void oneOfFrame(const int &frame,
 		  vector<wav_type> &left,
 		  vector<wav_type> &right = speech::null_vector );
 };
@@ -52,12 +52,11 @@ inheritFrame::inheritFrame(const char* filename,
   : frame( filename, sampling_freq, shift_msec, window_msec,
 	   n_Bytes, isStereo ){
 }
-void inheritFrame::oneOfFrame(int &frame,
+void inheritFrame::oneOfFrame(const int &frame,
 			      vector<wav_type> &left,
 			      vector<wav_type> &right ){
   cout << " inheritFrame::oneOfFrame #" << frame
        << "\t" << getMSec(frame) << " [ms]" << endl;
-  cout << "\t" << left.size() << " " << right.size() << endl;
 
 }
 
@@ -72,7 +71,6 @@ void test_frame_cpp(){
   inheritFrame fr( filename, sampling_freq, shift_msec, window_msec,
 		   n_Bytes, isStereo );
 
-  cout << fr.getNShiftSamples() << " " << fr.getNWindowSamples() << endl;
   fr.run();
 };
 
