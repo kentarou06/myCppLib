@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include "speech/dft/dft.h"
+#include "speech/frame/frame.h"
 #include "speech/io/io.h"
 #include "speech/lpc/lpc.h"
 #include "utility/utility.h"
@@ -11,10 +12,8 @@ using namespace std;
 using namespace speech;
 
 const double PI=acos(-1);
-
-void test_io_cpp();
-void test_fft_cpp();
-void test_lpc_cpp();
+void test_frame_cpp();  void test_io_cpp();
+void test_fft_cpp();    void test_lpc_cpp();
 
 template <typename T>
 T tmp_TEST(T a, T b){
@@ -25,10 +24,61 @@ int main(){
   cout << "run test" << endl;
   //  test_io_cpp();
   //  test_fft_cpp();
-  test_lpc_cpp();
+  //  test_lpc_cpp();
+  test_frame_cpp();
 
   return 0;
 }
+
+class inheritFrame : public frame{
+public:
+  inheritFrame(const char* filename,
+	       const int sampling_freq,
+	       const int shift_msec,
+	       const int window_msec,
+	       const int n_Bytes = 2,
+	       const bool isStereo = false );
+  void oneOfFrame(int &frame,
+		  vector<wav_type> &left,
+		  vector<wav_type> &right = speech::null_vector );
+};
+
+inheritFrame::inheritFrame(const char* filename,
+			   const int sampling_freq,
+			   const int shift_msec,
+			   const int window_msec,
+			   const int n_Bytes,
+			   const bool isStereo )
+  : frame( filename, sampling_freq, shift_msec, window_msec,
+	   n_Bytes, isStereo ){
+}
+void inheritFrame::oneOfFrame(int &frame,
+			      vector<wav_type> &left,
+			      vector<wav_type> &right ){
+  cout << " inheritFrame::oneOfFrame #" << frame
+       << "\t" << getMSec(frame) << " [ms]" << endl;
+  cout << "\t" << left.size() << " " << right.size() << endl;
+
+}
+
+void test_frame_cpp(){
+  cout << "test_frame_cpp" <<  endl;
+  char filename[256] = "../vaiueo2d.raw";
+  const int sampling_freq = 22050,
+    shift_msec = 20,
+    window_msec = 40,
+    n_Bytes = 2,
+    isStereo = false;
+  inheritFrame fr( filename, sampling_freq, shift_msec, window_msec,
+		   n_Bytes, isStereo );
+
+  cout << fr.getNShiftSamples() << " " << fr.getNWindowSamples() << endl;
+  fr.run();
+};
+
+
+
+
 
 void test_lpc_cpp(){
   char filename[256] = "../vaiueo2d.raw";
@@ -72,8 +122,9 @@ void test_lpc_cpp(){
     int fftSize = 512;
     lpc.getSpectral( spec, fftSize );
 
-    cout << "FRAME : " << frame << endl;
-    for( int i=0;i<fftSize;i++ ){
+    cout << "FRAME : " << frame << ", \t"
+	 << ( (double)i / samplingRate) << " [ms]" << endl;
+    for( int i=0;i<fftSize/2;i++ ){
       double freq = dft::convert_index_to_freq( i,
 					   2*fftSize,
 					   samplingRate );
@@ -118,7 +169,6 @@ void test_fft_cpp(){
     printf("%2d | % 10.4lf % 10.4lf\n", i, inv[i].real(), inv[i].imag() );
 
 }
-
 
 void test_io_cpp(){
   char filename[256] = "test00.raw"; //"vaiueo2d.raw";

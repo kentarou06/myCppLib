@@ -1,13 +1,13 @@
 . ${HOME}/Dropbox/settings/ubuntu/zsh_definition.sh
 
-echo ${CPP_OPT}
-
 sharedLib="libmyLib.so"
 
 if [ $# != 0 ]
 then
     echo "make shared library : ${sharedLib}"
-    sh ../makeSharedLib.sh
+    cd ..
+    sh makeSharedLib.sh
+    cd test/
     echo "*******************************************************************"
 fi
 
