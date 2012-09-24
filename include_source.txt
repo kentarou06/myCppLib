@@ -1,5 +1,5 @@
-speech/dft/dft.cpp
-speech/frame/frame.cpp
-speech/io/io.cpp
-speech/lpc/lpc.cpp
+speech/dft.cpp
+speech/frame.cpp
+speech/io.cpp
+speech/lpc.cpp
 utility/utility.cpp

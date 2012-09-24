@@ -3,10 +3,10 @@
 #include <complex>
 #include <cmath>
 #include <cstdio>
-#include "speech/dft/dft.h"
-#include "speech/frame/frame.h"
-#include "speech/io/io.h"
-#include "speech/lpc/lpc.h"
+#include "speech/dft.h"
+#include "speech/frame.h"
+#include "speech/io.h"
+#include "speech/lpc.h"
 #include "utility/utility.h"
 using namespace std;
 using namespace speech;

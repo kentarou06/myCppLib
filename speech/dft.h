@@ -1,6 +1,6 @@
 #include <vector>
 #include <complex>
-#include "../io/io.h"
+#include "io.h"
 using namespace std;
 
 #ifndef READ_DFT

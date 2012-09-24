@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
-#include "speech/frame/frame.h"
-#include "speech/io/io.h"
+#include "frame.h"
+#include "io.h"
 
 using namespace std;
 using namespace speech;

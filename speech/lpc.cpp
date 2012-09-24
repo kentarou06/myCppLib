@@ -2,8 +2,8 @@
 #include <vector>
 #include <cmath>
 #include "lpc.h"
-#include "speech/io/io.h"
-#include "speech/dft/dft.h"
+#include "io.h"
+#include "dft.h"
 using namespace std;
 
 namespace speech{

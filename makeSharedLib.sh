@@ -1,16 +1,16 @@
 
 nowDir=`pwd`
-cd ${HOME}/github/myCppLib
+cd ${HOME}/lib/myCppLib
 
 list_file="include_source.txt"
 output="libmylib.so"
-MYLIB="${HOME}/github/myCppLib"
+MYLIB="${HOME}/lib/myCppLib"
 
 files=`cat ${list_file}`
 arg=""
 objList=""
 i=0;
-MYLIB="${HOME}/github/myCppLib"
+MYLIB="${HOME}/lib/myCppLib"
 for file in $files
 do
     objFile="obj${i}.o"
@@ -23,7 +23,6 @@ done
 
 echo "g++ -shared ${objList} -o ${output}"
 g++ -shared ${objList} -o ${output}
-#rm ${objList}
 
 cd ${nowDir}
 

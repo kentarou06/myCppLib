@@ -2,7 +2,7 @@
 #include <vector>
 #include <complex>
 #include <cmath>
-#include "../io/io.h"
+#include "io.h"
 #include "dft.h"
 using namespace std;
 

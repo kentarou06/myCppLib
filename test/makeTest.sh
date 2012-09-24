@@ -1,4 +1,4 @@
-. ${HOME}/Dropbox/settings/ubuntu/zsh_definition.sh
+#. ${HOME}/Dropbox/settings/ubuntu/zsh_definition.sh
 
 sharedLib="libmyLib.so"
 
@@ -12,8 +12,6 @@ then
 fi
 
 echo "make test"
+sh ${HOME}/lib/myCppLib/compile_c++_with_mylib.sh test.cpp test
 
-MYLIB="${HOME}/github/myCppLib"
-echo "g++ -Wall test.cpp -I${MYLIB} -L${MYLIB} -lmylib -o test"
-g++ -Wall test.cpp -I${MYLIB} -L${MYLIB} -lmylib -o test
 
