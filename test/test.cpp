@@ -5,6 +5,7 @@
 #include <cstdio>
 #include "speech/dft.h"
 #include "speech/frame.h"
+#include "speech/gammatone.h"
 #include "speech/io.h"
 #include "speech/lpc.h"
 #include "utility/utility.h"
@@ -14,6 +15,7 @@ using namespace speech;
 const double PI=acos(-1);
 void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
+void test_gammatone_cpp();
 
 template <typename T>
 T tmp_TEST(T a, T b){
@@ -25,10 +27,51 @@ int main(){
   //  test_io_cpp();
   //  test_fft_cpp();
   //  test_lpc_cpp();
-  test_frame_cpp();
-
+  //  test_frame_cpp();
+  test_gammatone_cpp();
   return 0;
 }
+
+void test_gammatone_cpp(){
+
+  const int samplingFrequency = 10000;
+  const double centerFrequency = 100.0;
+  const double bandwidth = gammatone::getBandWidth( centerFrequency );
+
+  const int length = samplingFrequency;
+  vector<double> impulseByDef(length);
+  for( int i=0;i<length;i++ ){
+    double t = (double) i / samplingFrequency;
+    impulseByDef[i] = pow(t,4-1) * exp( -2.0*PI*bandwidth*t )
+      * cos( 2.0*PI*centerFrequency*t );
+  }
+
+  gammatone gf( centerFrequency, bandwidth, samplingFrequency );
+  vector<double> impulseByClass(length);
+  impulseByClass[0] = 1.0;
+  for( int i=1;i<length;i++ )
+    impulseByClass[i] = 0.0;
+  impulseByClass = gf.filter( impulseByClass );
+
+  double mx1=0.0, mx2=0.0;
+  for( int i=0;i<length;i++ ){
+    mx1 = max(mx1, fabs(impulseByDef[i]) );
+    mx2 = max(mx2, fabs(impulseByClass[i]) );
+  }
+  for( int i=0;i<length;i++ ){
+    impulseByDef[i] = 1.0 * impulseByDef[i] / mx1;
+    impulseByClass[i] = 1.0 * impulseByClass[i] / mx2;
+  }
+
+  cout << "index\ttime\tdefinition\tIIR" << endl;
+  for( int i=0;i<length;i++ )
+    cout << i << "\t" << (double)i/samplingFrequency
+	 << "\t" << impulseByDef[i]
+	 << "\t" << impulseByClass[i] << endl;
+
+}
+
+
 
 class inheritFrame : public frame{
 public:
