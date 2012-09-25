@@ -12,7 +12,7 @@
 using namespace std;
 using namespace speech;
 
-const double PI=acos(-1);
+const double PI = acos(-1);
 void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
 void test_gammatone_cpp();
@@ -33,9 +33,8 @@ int main(){
 }
 
 void test_gammatone_cpp(){
-
   const int samplingFrequency = 10000;
-  const double centerFrequency = 100.0;
+  const double centerFrequency = 1000.0;
   const double bandwidth = gammatone::getBandWidth( centerFrequency );
 
   const int length = samplingFrequency;

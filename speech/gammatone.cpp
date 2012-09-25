@@ -5,7 +5,7 @@
 using namespace std;
 
 namespace speech{
-  const double PI = cos(-1.0);
+  const double PI = acos(-1.0);
 
   gammatone::gammatone( const double centerFrequency,
 			const double bandWidth,
