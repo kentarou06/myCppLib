@@ -1,9 +1,6 @@
-
 /*  p : order
     lpc coefficient  lpc[0]=1.0, lpc[1], lpc[2],..., lpc[p]
 */
-
-
 #include <vector>
 #include "io.h"
 using namespace std;
@@ -31,9 +28,16 @@ namespace speech{
     /* lpc[0] is always 1.0 if return value is true */
     bool getLPC(vector<wav_type> &lpc);
     bool getAutocorrelation(vector<wav_type> &r);
+    bool getResidue(vector<wav_type> &residue);
     int getOrder();
+
+    /* 0 <= frequency < sampling frequency */
     bool getSpectral(vector<wav_type> &spec, int fftSize);
 
     bool analysis(const int p);
+
+    /* LPC synthesis */
+    bool filter( const vector<wav_type> &input,
+		 vector<wav_type> &output );
   };
 };

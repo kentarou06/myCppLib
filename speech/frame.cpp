@@ -25,7 +25,6 @@ namespace speech{
 
   /* run main loop */
   void frame::run(){
-
     vector<wav_type> left, right;
     if( isStereo ){
       if( !io::read( filename, n_Bytes, left, right ) ){

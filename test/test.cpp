@@ -15,7 +15,7 @@ using namespace speech;
 const double PI = acos(-1);
 void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
-void test_gammatone_cpp();
+void test_gammatone_cpp(); void test_lpc_cpp2();
 
 template <typename T>
 T tmp_TEST(T a, T b){
@@ -28,8 +28,95 @@ int main(){
   //  test_fft_cpp();
   //  test_lpc_cpp();
   //  test_frame_cpp();
-  test_gammatone_cpp();
+  //  test_gammatone_cpp();
+  test_lpc_cpp2();
   return 0;
+}
+
+class analysisAndSynthesisFrame : public frame{
+public:
+  int shiftSample;
+  vector<wav_type> conv;
+
+  analysisAndSynthesisFrame():
+    frame( "../vaiueo2d.raw",
+	   22050, // samplingFrequency
+	   10,    // shift_msec
+	   20)    // window_msec
+  {
+    shiftSample = getNShiftSamples();
+  }
+
+  void oneOfFrame(const int &frame,
+		  vector<wav_type> &left, // preemphasised
+		  vector<wav_type> &right ){
+
+    // should be window function !
+
+    for( int i=0;i<(int)left.size();i++ ) // hanning window
+      left[i] *= ( 0.5 - 0.5 * cos(2.0*acos(-1.0)*i/(left.size()-1)) );
+    int order = 24;
+    LPC lpc( left );
+    lpc.analysis( order );
+    vector<wav_type> residue;
+    if( !lpc.getResidue( residue ) )
+      cout << "rResidue is empty  ";
+    /* pitch in [ 80Hz, 300Hz]     */
+    int mSt = sampling_freq/300,
+        mEn = min( sampling_freq/80 +1,
+		   (int)residue.size() );
+    double mx=0.0;
+    int mIndex = mSt;
+    for( int i=mSt;i<mEn;i++ ){
+      if( fabs(residue[i]) > mx ){
+	mx=fabs(residue[i]); mIndex=i;
+      }
+    }
+    if( frame==0 )
+      cout << "[" << mSt <<", " << mEn <<"]" << endl;
+
+    double power = 0.0;
+    for( int i=0;i<(int)residue.size();i++ )
+      power += residue[i] * residue[i];
+    power = sqrt( power );
+
+    cout << "mIndex = "<< mIndex
+	 << " \t" << 1000.0*mIndex/sampling_freq
+	 << " msec \t"
+	 << 1.0*sampling_freq/mIndex << " [Hz]"
+	 << " " << power << endl;
+
+    vector<wav_type> input(left.size() ), output;
+    for( int i=0;i<(int)input.size();i++ )
+      input[i] = i%mIndex?0.0:power;
+
+    if( !lpc.filter( input, output ) )
+      cout << "filter failed" << endl;
+
+    //    for( int i=0;i<100;i++ )      conv.push_back( 0.0 );
+
+    int totalIndex = frame * shiftSample;
+    for( int i=0;i<(int)output.size();i++ ){
+      unsigned int wIndex = totalIndex + i;
+      if( wIndex < conv.size() )
+	conv[wIndex] += output[i];
+      else
+	conv.push_back( output[i] );
+    }
+  }
+};
+
+void test_lpc_cpp2(){
+  analysisAndSynthesisFrame ASFrame;
+  ASFrame.run();
+
+  cout << "WRITING" << endl;
+  const char* output="output.raw";
+  const int n_Bytes = 2;
+  if( io::write( output, n_Bytes, ASFrame.conv ) )
+    cout << "writing success." << endl;
+  else
+    cout << "writing failed." << endl;
 }
 
 void test_gammatone_cpp(){

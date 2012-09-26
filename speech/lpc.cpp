@@ -23,7 +23,6 @@ namespace speech{
   }
 
   /*   constructor   */
-
   LPC::LPC(){
     init();
   };
@@ -104,7 +103,19 @@ namespace speech{
 
     return true;
   }
+  bool LPC::getResidue(vector<wav_type> &residue){
+    if( this->lpc.empty() || this->signal.empty() )
+      return false;
 
+    residue.clear();
+    residue.resize( this->signal.size() );
+    for( int i=0;i<(int)this->signal.size();i++ ){
+      residue[i] = signal[i];
+      for( int k=1;k<(int)lpc.size()&&i-k>=0;k++ )
+	     residue[i] -= lpc[k] * signal[i-k];
+    }
+    return true;
+  }
   int LPC::getOrder(){
     return p;
   }
@@ -130,9 +141,6 @@ namespace speech{
 
     return true;
   }
-
-
-
 
   bool LPC::analysis(const int p){
     if( p<=0 )
@@ -182,6 +190,24 @@ namespace speech{
     }
     return true;
   }
+
+
+  /* LPC synthesis */
+  bool LPC::filter( const vector<wav_type> &input,
+	       vector<wav_type> &output ){
+    if( lpc.empty() )
+      return false;
+
+    output.clear();
+    output.resize( input.size() );
+    for( int i=0;i<(int)input.size();i++ ){
+      output[i] = input[i];
+      for( int k=1;k<(int)lpc.size()&&i-k>=0;k++ )
+        output[i] -= lpc[k] * output[i-k];
+    }
+    return true;
+  }
+
 
 
 };

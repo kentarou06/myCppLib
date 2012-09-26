@@ -5,7 +5,7 @@ namespace speech{
 
   /* 音声ファイルに対して、フレームの切り出しを行う．   */
   class frame{
-  private:
+  protected:
     int fileNameSize;
     char* filename;
     int sampling_freq, shift_msec, window_msec, n_Bytes;

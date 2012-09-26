@@ -11,8 +11,7 @@ namespace speech{
 			const double bandWidth,
 			const double samplingFrequency ){
     this->centerFrequency = centerFrequency;
-    this->bandWidth = 2.0 * PI * 1.019
-      * bandWidth; // further multiplied by 1.019
+    this->bandWidth = 2.0 * PI * bandWidth;
     this->samplingFrequency = samplingFrequency;
 
     init();
