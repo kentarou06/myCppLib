@@ -47,6 +47,35 @@ namespace speech{
     return output;
   }
 
+  vector<wav_type> gammatone::invFilter( const vector<wav_type> input ){
+    vector<wav_type> output = input;
+
+    for( int filterN=0; filterN<4; filterN++ )
+      output = secondOrderInvFilter( filterN, output );
+
+    return output;
+  }
+
+  vector<wav_type> gammatone::secondOrderInvFilter(const int filterN,
+					const vector<wav_type> input ){
+    vector<wav_type> output( input.size() );
+    double z1 = 0.0, z2 = 0.0, z3 = 0.0, z4 = 0.0;
+
+    for( int i=0;i<(int)input.size();i++ ){
+      output[i] = input[i] + b[filterN][1] * z1 + b[filterN][2] * z2 
+	- a[filterN][1] * z3 - a[filterN][2] * z4;
+      output[i] = output[i] / a[filterN][0];
+      z2 = z1;
+      z1 = input[i];
+      z4 = z3;
+      z3 = output[i];
+    }
+
+    return output;
+  }
+
+
+
   vector<wav_type> gammatone::secondOrderFilter( const int filterN,
 						 const vector<wav_type> input ){
     vector<wav_type> output( input.size() );
