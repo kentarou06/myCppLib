@@ -3,4 +3,5 @@ speech/frame.cpp
 speech/gammatone.cpp
 speech/io.cpp
 speech/lpc.cpp
+speech/temporary.cpp
 utility/utility.cpp
