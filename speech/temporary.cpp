@@ -5,12 +5,15 @@
 #include "temporary.h"
 
 namespace speech{
-
+  const double base = pow(2.0, 15);
   double getEnergy(const vector<wav_type> &signal){
-    double energy = 0.0;
+    double energy = 0.0, tmp;
 
-  for( int i=0;i<(int)signal.size();i++ )
-    energy += signal[i] * signal[i];
+    for( int i=0;i<(int)signal.size();i++ ){
+      tmp = signal[i] / base;
+      energy += tmp * tmp;
+    }
+    energy = energy / signal.size();
 
     return energy;
   }
