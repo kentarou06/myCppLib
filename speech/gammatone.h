@@ -42,5 +42,10 @@ namespace speech{
         bandwidth = 24.7*( 4.37/1000.0 * centerFrequency + 1 )
      */
     static double getBandWidth(const double centerFrequency);
+
+    static vector<double> getCenterFrequencies(double beginFreq,
+							  double endFreq,
+							  int divideN );
+
   };
 };

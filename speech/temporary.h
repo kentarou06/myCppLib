@@ -3,6 +3,15 @@
 using namespace std;
 
 namespace speech{
+  /* calculate signal coefficient when changing SNR to targetSNRdB */
+  double getCoeForSignal( const vector<wav_type> signal, const vector<wav_type> noise,
+			  const double targetSNRdB );
+  /* calculate noise coefficient when changing SNR to targetSNRdB */
+  double getCoeForNoise( const vector<wav_type> signal, const vector<wav_type> noise,
+			 const double targetSNRdB );
+
+  double getSNR(const vector<wav_type> signal, const vector<wav_type> noise);
+  double getSNRbydB(const vector<wav_type> signal, const vector<wav_type> noise);
 
   double getEnergy(const vector<wav_type> &signal);
   double getEnergyBydB(const vector<wav_type> &signal);

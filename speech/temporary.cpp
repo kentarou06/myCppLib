@@ -5,6 +5,32 @@
 #include "temporary.h"
 
 namespace speech{
+  /* calculate signal coefficient when changing SNR to targetSNRdB */
+  double getCoeForSignal( const vector<wav_type> signal, const vector<wav_type> noise,
+			  const double targetSNRdB ){
+    return sqrt( pow( 10.0, 0.1*targetSNRdB ) / getSNR( signal, noise ) );
+  }
+  /* calculate noise coefficient when changing SNR to targetSNRdB */
+  double getCoeForNoise( const vector<wav_type> signal, const vector<wav_type> noise,
+			 const double targetSNRdB ){
+    return sqrt( getSNR( signal, noise ) / pow( 10.0, -0.1*targetSNRdB ) );
+  }
+
+
+  double getSNR(const vector<wav_type> signal, const vector<wav_type> noise){
+    double ps=0.0, pn=0.0;
+    for( int i=0;i<(int)signal.size();i++ )
+      ps += signal[i] * signal[i];
+    ps = ps / signal.size();
+    for( int i=0;i<(int)noise.size();i++ )
+      pn += noise[i] * noise[i];
+    pn = pn / noise.size();
+    return ps / pn;
+  }
+  double getSNRbydB(const vector<wav_type> signal, const vector<wav_type> noise){
+    return 10.0 * log( getSNR(signal, noise) ) / log( 10.0 );
+  }
+
   const double base = pow(2.0, 15);
   double getEnergy(const vector<wav_type> &signal){
     double energy = 0.0, tmp;
@@ -59,7 +85,7 @@ namespace speech{
   double gaussian(double myu, double sgm){
     static int    frag = 0;
     static double save = 0.0;
-  
+
     if(frag == 0){
       double u_0 = genRand();
       double u_1 = genRand();
