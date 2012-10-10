@@ -80,8 +80,40 @@ namespace speech{
       return false;
     }
 
+
     const int maxSample = n_Bytes==1?127:32767;
     double max = 0.0, tmp;
+    bool isExceed = false;
+    union sample smp;
+    for( int i=0;i<(int)left.size();i++ ){
+      tmp = left[i];
+      isExceed = isExceed | (tmp>maxSample);
+
+      if( n_Bytes==1 ){ // 1byte 1channel
+	smp.c[0] = (signed char)tmp;
+	ofs.write( &smp.c[0], sizeof(char) );
+      }else{            // 2byte 1channel
+	smp.s = (short)tmp;
+	ofs.write( &smp.c[0], sizeof(char) );
+	ofs.write( &smp.c[1], sizeof(char) );
+      }
+
+      if( !isMono ){
+	tmp = right[i];
+	isExceed = isExceed | (tmp>maxSample);
+	if( n_Bytes==1 ){ // 1byte 2channel
+	  smp.c[0] = (signed char)tmp;
+	  ofs.write( &smp.c[0], sizeof(char) );
+	}else{            // 2byte 2channel
+	  smp.s = (short)tmp;
+	  ofs.write( &smp.c[0], sizeof(char) );
+	  ofs.write( &smp.c[1], sizeof(char) );
+	}
+      }
+    }
+    if( isExceed )
+      cerr << "exceed value : " << maxSample << endl;
+    /*
     for( int i=0;i<(int)left.size();i++ ){
       tmp = fabs( left[i] );
       max = max<tmp?tmp:max;
@@ -117,6 +149,7 @@ namespace speech{
 	}
       }
     }
+*/
     ofs.close();
     return true;;
   }
