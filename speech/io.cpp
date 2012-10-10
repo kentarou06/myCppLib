@@ -87,7 +87,7 @@ namespace speech{
     union sample smp;
     for( int i=0;i<(int)left.size();i++ ){
       tmp = left[i];
-      isExceed = isExceed | (tmp>maxSample);
+      isExceed = isExceed | (fabs(tmp)>maxSample);
 
       if( n_Bytes==1 ){ // 1byte 1channel
 	smp.c[0] = (signed char)tmp;
@@ -100,7 +100,7 @@ namespace speech{
 
       if( !isMono ){
 	tmp = right[i];
-	isExceed = isExceed | (tmp>maxSample);
+	isExceed = isExceed | (fabs(tmp)>maxSample);
 	if( n_Bytes==1 ){ // 1byte 2channel
 	  smp.c[0] = (signed char)tmp;
 	  ofs.write( &smp.c[0], sizeof(char) );
