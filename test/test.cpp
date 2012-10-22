@@ -8,6 +8,7 @@
 #include "speech/gammatone.h"
 #include "speech/io.h"
 #include "speech/lpc.h"
+#include "speech/mel.h"
 #include "utility/utility.h"
 using namespace std;
 using namespace speech;
@@ -16,7 +17,7 @@ const double PI = acos(-1);
 void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
 void test_gammatone_cpp(); void test_lpc_cpp2();
-
+void test_mel_cpp();
 template <typename T>
 T tmp_TEST(T a, T b){
   return a+b;
@@ -29,8 +30,46 @@ int main(){
   //  test_lpc_cpp();
   //  test_frame_cpp();
   //  test_gammatone_cpp();
-  test_lpc_cpp2();
+  //  test_lpc_cpp2();
+  test_mel_cpp();
   return 0;
+}
+
+void test_mel_cpp(){
+  bool convertTest = false, centerMelFreqTest = false;
+  if( convertTest ){
+    for(int i=0;i<100;i++ ){
+      double ml  = MEL::convertMelFrequency( 100.0*i );
+      double freq= MEL::convertFrequency( ml );
+      cout << i << "\t" << ml << "\t" << freq << endl;
+    }
+  }
+
+  if( centerMelFreqTest ){
+    vector<double> freqs = MEL::getCenterMelFrequencies(0.0, 10.0, 4);
+    for( int i=0;i<(int)freqs.size();i++ )
+      cout << i << "\t" << freqs[i] << endl;
+  }
+
+  int DFTSize = 16*2, filterN = 4*3*2;
+  double freqResolusion = 1.0;
+  double lowFreq=0.0, highFreq=16*2;
+  MEL melFilterBank(DFTSize, filterN, freqResolusion, lowFreq, highFreq);
+
+  vector< vector<double> > filterBank;
+  for( int i=0;i<filterN;i++ )
+    filterBank.push_back( melFilterBank.getFilter(i) );
+
+  for( int freqIndex=0;freqIndex<(int)filterBank[0].size();freqIndex++ ){
+    printf("%3d", freqIndex);
+    for( int bankIndex=0;bankIndex<filterN;bankIndex++ ){
+      if( filterBank[bankIndex][freqIndex] > 0.00001 )
+	printf(" %.2lf", filterBank[bankIndex][freqIndex] );
+      else
+	printf(" %4d", 0);
+    }
+    cout << endl;
+  }
 }
 
 class analysisAndSynthesisFrame : public frame{
