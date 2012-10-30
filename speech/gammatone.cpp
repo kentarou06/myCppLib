@@ -44,9 +44,11 @@ namespace speech{
     for( int filterN=0; filterN<4; filterN++ )
       output = secondOrderFilter( filterN, output );
 
+#ifdef USE_COEFFICIENTS
     double coe = pow( bandWidth, 4.0 );
     for( int i=0;i<(int)output.size();i++ )
       output[i] = coe * output[i];
+#endif
 
     return output;
   }
@@ -57,9 +59,11 @@ namespace speech{
     for( int filterN=0; filterN<4; filterN++ )
       output = secondOrderInvFilter( filterN, output );
 
+#ifdef USE_COEFFICIENTS
     double coe = pow( bandWidth, -4.0 );
     for( int i=0;i<(int)output.size();i++ )
       output[i] = coe * output[i];
+#endif
 
     return output;
   }

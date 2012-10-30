@@ -9,11 +9,13 @@
       An Efficient Implementation of the Patterson-Holdsworth
       Auditory Filter Bank
 
-    TODO : Amplitude adjustment. ( with g(t) ? )
 */
 #include <vector>
 #include "io.h"
 using namespace std;
+
+/* multiply coefficients if USE_COEFFICIENTS is defined */
+//#define USE_COEFFICIENTS
 
 namespace speech{
   class gammatone{
