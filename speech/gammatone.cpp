@@ -8,10 +8,11 @@ namespace speech{
   const double PI = acos(-1.0);
 
   gammatone::gammatone( const double centerFrequency,
-			const double bandWidth,
+			const double equivalentRectangularBandWidth,
 			const double samplingFrequency ){
     this->centerFrequency = centerFrequency;
-    this->bandWidth = 2.0 * PI * bandWidth;
+    this->ERBandwidth = equivalentRectangularBandWidth;
+    this->PIERBandwidth = 2.0 * PI * this->ERBandwidth;
     this->samplingFrequency = samplingFrequency;
 
     init();
@@ -21,7 +22,7 @@ namespace speech{
     const double dt = 1.0 / samplingFrequency;
     const double rad = 2.0 * PI * centerFrequency * dt;
     const double cs = cos( rad ), sn = sin( rad );
-    const double ex = exp( dt * bandWidth );
+    const double ex = exp( dt * PIERBandwidth );
     const double sq1 = sqrt( 3.0 + pow(2.0, 3.0/2.0) ),
       sq2 = sqrt( 3.0 - pow(2.0, 3.0/2.0) );
 
@@ -30,7 +31,7 @@ namespace speech{
       a[i][2] = 0.0;
       b[i][0] = 1.0;
       b[i][1] = -2.0 * cs / ex;
-      b[i][2] = exp( -2.0 * bandWidth * dt );
+      b[i][2] = exp( -2.0 * PIERBandwidth * dt );
     }
     a[0][1] = -( 2.0*dt*cs/ex + 2.0*sq1*dt*sn/ex ) / 2.0;
     a[1][1] = -( 2.0*dt*cs/ex - 2.0*sq1*dt*sn/ex ) / 2.0;
@@ -45,7 +46,7 @@ namespace speech{
       output = secondOrderFilter( filterN, output );
 
 #ifdef USE_COEFFICIENTS
-    double coe = pow( bandWidth, 4.0 );
+    double coe = pow( ERBandwidth, 4.0 );
     for( int i=0;i<(int)output.size();i++ )
       output[i] = coe * output[i];
 #endif
@@ -60,7 +61,7 @@ namespace speech{
       output = secondOrderInvFilter( filterN, output );
 
 #ifdef USE_COEFFICIENTS
-    double coe = pow( bandWidth, -4.0 );
+    double coe = pow( ERBandwidth, -4.0 );
     for( int i=0;i<(int)output.size();i++ )
       output[i] = coe * output[i];
 #endif
@@ -105,6 +106,9 @@ namespace speech{
   double gammatone::getBandWidth(const double centerFrequency){
     return 24.7 * ( 4.37 * centerFrequency / 1000.0 + 1.0 );
   }
+  double gammatone::getEquivalentRectangularBandwidth(const double centerFrequency){
+    return gammatone::getBandWidth( centerFrequency );
+  }
 
   double getERB(double f){
     return 21.4 * log( 4.37*f/1000.0 + 1 ) / log( 10.0 );
@@ -112,7 +116,7 @@ namespace speech{
   double getFreq(double erb){
     return ( pow(10.0,erb/21.4)-1 ) * 1000/4.37;
   }
-  double getERBBand(double f){
+  double getERBand(double f){
     return 24.7*( 4.37/1000.0 * f + 1 );
   }
   vector<double> gammatone::getCenterFrequencies(double beginFreq,
@@ -127,7 +131,7 @@ namespace speech{
       frequencies[i] = getFreq( erb );
       /*
       double freq = getFreq( erb );
-      double band = getERBBand( freq );
+      double band = getERBand( freq );
       */
     }
     return frequencies;
