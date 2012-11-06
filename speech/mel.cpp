@@ -13,7 +13,9 @@ namespace speech{
     lowMel(MEL::convertMelFrequency(lowFreq)),
     highMel(MEL::convertMelFrequency(highFreq))
   {
-    centerMelFrequencies = MEL::getCenterMelFrequencies(lowMel, highMel, filterN);
+    centerMelFrequencies = MEL::getCenterMelFrequencies(lowMel,
+							highMel,
+							filterN);
     bank.reserve( filterN );
     double lm, hm, cm, freq, mFreq;
     for( int i=0;i<filterN;i++ ){
@@ -42,8 +44,8 @@ namespace speech{
   }
 
   vector<double> MEL::getCenterMelFrequencies(const double lowMel,
-					 const double highMel,
-					 const int filterN){
+					      const double highMel,
+					      const int filterN){
     double width = (highMel-lowMel)/(filterN+1);
     vector<double> melFrequencies(filterN);
     for( int i=0;i<filterN;i++ )

@@ -9,16 +9,18 @@
       An Efficient Implementation of the Patterson-Holdsworth
       Auditory Filter Bank
 
-    TODO : Amplitude adjustment. ( with g(t) ? )
 */
 #include <vector>
 #include "io.h"
 using namespace std;
 
+/* multiply coefficients if USE_COEFFICIENTS is defined */
+#define USE_COEFFICIENTS
+
 namespace speech{
   class gammatone{
   private:
-    double centerFrequency, bandWidth;
+    double centerFrequency, PIERBandwidth, ERBandwidth;
     double samplingFrequency;
     double a[4][3], b[4][3];
     void init();
@@ -29,7 +31,7 @@ namespace speech{
 
   public:
     gammatone( const double centerFrequency,
-	       const double bandWidth,
+	       const double equivalentRectangularBandWidth,
 	       const double samplingFrequency );
 
     /* input is passed by gammatone filter */
@@ -39,13 +41,19 @@ namespace speech{
     vector<wav_type> invFilter( const vector<wav_type> input );
 
     /* bandwidth [Hz] that correspond to centerFrequency.
-        bandwidth = 24.7*( 4.37/1000.0 * centerFrequency + 1 )
+        return bandwidth = 24.7*( 4.37/1000.0 * centerFrequency + 1 )
      */
     static double getBandWidth(const double centerFrequency);
+    /* same method above */
+    static double getEquivalentRectangularBandwidth(const double centerFrequency);
 
+
+    /* uniformly divide by ERB between beginFreq and endFreq
+       and return frequencies
+     */
     static vector<double> getCenterFrequencies(double beginFreq,
-							  double endFreq,
-							  int divideN );
+					       double endFreq,
+					       int divideN );
 
   };
 };

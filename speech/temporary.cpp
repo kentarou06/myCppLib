@@ -13,7 +13,7 @@ namespace speech{
   /* calculate noise coefficient when changing SNR to targetSNRdB */
   double getCoeForNoise( const vector<wav_type> signal, const vector<wav_type> noise,
 			 const double targetSNRdB ){
-    return sqrt( getSNR( signal, noise ) / pow( 10.0, -0.1*targetSNRdB ) );
+    return sqrt( getSNR( signal, noise ) * pow( 10.0, -0.1*targetSNRdB ) );
   }
 
 
@@ -76,7 +76,8 @@ namespace speech{
   }
 
 
-  /* http://www-section.cocolog-nifty.com/blog/2008/09/box-muller-2275.html*/  void setSeed() {
+  /* http://www-section.cocolog-nifty.com/blog/2008/09/box-muller-2275.html*/
+  void setSeed() {
     srand((unsigned)time(NULL));
   }
   double genRand() {
