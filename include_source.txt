@@ -6,4 +6,4 @@ speech/lpc.cpp
 speech/mel.cpp
 speech/temporary.cpp
 speech/window.cpp
-utility/utility.cpp
+utility.cpp
