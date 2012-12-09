@@ -39,5 +39,33 @@ namespace speech{
 	       const vector<wav_type> &left,
 	       const vector<wav_type> &right=null_vector );
   };
+
+  class wav{
+  private:
+    string filename;
+    int channel, sampling_frequency, n_bytes;
+    vector<wav_type> left, right;
+
+  public:
+    wav();
+    wav(const char* filename);
+
+    void set_filename(const string &filename);
+    string get_filename();
+
+    void set_channel(const int &channel);
+    int get_channel();
+    void set_sampling_frequency(const int &sampling_frequency);
+    int get_sampling_frequency();
+    void set_n_bytes(const int &n_bytes);
+    int get_n_bytes();
+    void set_left_data(const vector<wav_type> &left);
+    vector<wav_type> get_left_data();
+    void set_right_data(const vector<wav_type> &right);
+    vector<wav_type> get_right_data();
+
+    bool read();
+    bool write();
+  };
 };
 #endif

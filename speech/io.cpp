@@ -124,4 +124,26 @@ namespace speech{
     ofs.close();
     return true;;
   }
+
+  /* wav */
+  wav::wav(){}
+  wav::wav(const char* filename){}
+
+  void wav::set_filename(const string &filename){}
+  string wav::get_filename(){}
+
+  void wav::set_channel(const int &channel){}
+  int wav::get_channel(){}
+  void wav::set_sampling_frequency(const int &sampling_frequency){}
+  int wav::get_sampling_frequency(){}
+  void wav::set_n_bytes(const int &n_bytes){}
+  int wav::get_n_bytes(){}
+  void wav::set_left_data(const vector<wav_type> &left){}
+  vector<wav_type> wav::get_left_data(){}
+  void wav::set_right_data(const vector<wav_type> &right){}
+  vector<wav_type> wav::get_right_data(){}
+
+  bool wav::read(){}
+  bool wav::write(){}
+
 };
