@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include "speech/dft.h"
+#include "speech/filter.h"
 #include "speech/frame.h"
 #include "speech/gammatone.h"
 #include "speech/io.h"
@@ -18,13 +19,14 @@ void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
 void test_gammatone_cpp(); void test_lpc_cpp2();
 void test_mel_cpp(); void test_utility();
+void test_filter();
 template <typename T>
 T tmp_TEST(T a, T b){
   return a+b;
 }
 
 int main(){
-  cout << "run test" << endl;
+  //  cout << "run test" << endl;
   //  test_io_cpp();
   //  test_fft_cpp();
   //  test_lpc_cpp();
@@ -32,8 +34,32 @@ int main(){
   //  test_gammatone_cpp();
   //  test_lpc_cpp2();
   //  test_mel_cpp();
-  test_utility();
+  //  test_utility();
+  test_filter();
   return 0;
+}
+
+void test_filter(){
+  int samplingFrequency = 1000;
+  double low_freq = 10.0, high_freq = 400.0;
+  double cutoff = 100.0;
+  vector<double> input(10000),output;
+  for( int i=0;i<(int)input.size();i++ )
+    input[i] = cos( 2.0*M_PI*low_freq*i/samplingFrequency )
+      + cos( 2.0*M_PI*high_freq*i/samplingFrequency );
+
+  //  output = LPF( input, cutoff, samplingFrequency, 256, hann_window );
+  //  output = LPF( input, cutoff, samplingFrequency, 256, hamming_window );
+  output = LPF( input, cutoff, samplingFrequency, 256, blackman_window );
+
+  /*
+    output = LPF( input, cutoff, samplingFrequency, 256 );
+    output = LPF( output, cutoff, samplingFrequency, 256 );
+    output = LPF( output, cutoff, samplingFrequency, 256 );
+    output = LPF( output, cutoff, samplingFrequency, 256 );
+  */
+  for( int i=0;i<(int)input.size();i++ )
+    cout << i << "\t" << input[i] << "\t" << output[i] << endl;
 }
 
 void test_utility(){
