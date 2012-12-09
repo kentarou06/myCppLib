@@ -9,7 +9,7 @@
 #include "speech/io.h"
 #include "speech/lpc.h"
 #include "speech/mel.h"
-#include "utility/utility.h"
+#include "utility.h"
 using namespace std;
 using namespace speech;
 
@@ -17,7 +17,7 @@ const double PI = acos(-1);
 void test_frame_cpp();  void test_io_cpp();
 void test_fft_cpp();    void test_lpc_cpp();
 void test_gammatone_cpp(); void test_lpc_cpp2();
-void test_mel_cpp();
+void test_mel_cpp(); void test_utility();
 template <typename T>
 T tmp_TEST(T a, T b){
   return a+b;
@@ -31,8 +31,18 @@ int main(){
   //  test_frame_cpp();
   //  test_gammatone_cpp();
   //  test_lpc_cpp2();
-  test_mel_cpp();
+  //  test_mel_cpp();
+  test_utility();
   return 0;
+}
+
+void test_utility(){
+  cout << "test for utility.h" << endl;
+  char a[100] = "abcedfg hij あいうえお\nかきくけこ";
+  string s = atos(a);
+
+  cout << " char : " << a << endl;
+  cout << " str  : " << s << endl;
 }
 
 void test_mel_cpp(){
