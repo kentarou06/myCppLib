@@ -127,23 +127,57 @@ namespace speech{
 
   /* wav */
   wav::wav(){}
-  wav::wav(const char* filename){}
+  wav::wav(const char* filename){
+    set_filename(filename);
+  }
 
-  void wav::set_filename(const string &filename){}
-  string wav::get_filename(){}
+  void wav::set_filename(const string &filename){
+    this->filename = filename;
+  }
+  string wav::get_filename(){
+    return filename;
+  }
 
-  void wav::set_channel(const int &channel){}
-  int wav::get_channel(){}
-  void wav::set_sampling_frequency(const int &sampling_frequency){}
-  int wav::get_sampling_frequency(){}
-  void wav::set_n_bytes(const int &n_bytes){}
-  int wav::get_n_bytes(){}
-  void wav::set_left_data(const vector<wav_type> &left){}
-  vector<wav_type> wav::get_left_data(){}
-  void wav::set_right_data(const vector<wav_type> &right){}
-  vector<wav_type> wav::get_right_data(){}
+  void wav::set_channel(const int &channel){
+    this->channel = channel;
+  }
+  int wav::get_channel(){
+    return channel;
+  }
 
-  bool wav::read(){}
-  bool wav::write(){}
+  void wav::set_sampling_frequency(const int &sampling_frequency){
+    this->sampling_frequency = sampling_frequency;
+  }
+  int wav::get_sampling_frequency(){
+    return sampling_frequency;
+  }
+
+  void wav::set_n_bytes(const int &n_bytes){
+    this->n_bytes = n_bytes;
+  }
+  int wav::get_n_bytes(){
+    return n_bytes;
+  }
+
+  void wav::set_left_data(const vector<wav_type> &left){
+    this->left = left;
+  }
+  vector<wav_type> wav::get_left_data(){
+    return this->left;
+  }
+
+  void wav::set_right_data(const vector<wav_type> &right){
+    this->right = right;
+  }
+  vector<wav_type> wav::get_right_data(){
+    return this->right;
+  }
+
+  bool wav::read(){
+    return false;
+  }
+  bool wav::write(){
+    return false;
+  }
 
 };
