@@ -378,17 +378,42 @@ void test_io_cpp(){
   vector<wav_type> left, right;
 
   if( bool test_wav_class = true ){
-    string filename = "../vaiueo2d.wav";
-    wav w( filename );
 
-    if( w.read() )
-      cout << "success to read wav" << endl;
-    else
-      cout << "failed to read wav" << endl;
+    if( bool read_test = false ){
+      string filename = "wav_output_test.wav";
+      //      string filename = "../vaiueo2d.wav";
+      wav w( filename );
 
-    vector<double> v = w.get_left_data();
-    for( int i=0;i<(int)v.size();i++ )
-      cout << i/22050.0 << "\t" << v[i] << endl;
+      if( w.read() )
+	cout << "success to read wav" << endl;
+      else
+	cout << "failed to read wav" << endl;
+
+      vector<double> v = w.get_left_data();
+      //      for( int i=0;i<(int)v.size();i++ )	cout << i/22050.0 << "\t" << v[i] << endl;
+
+      return;
+    }
+
+    if( bool write_test = true ){
+      string filename = "wav_output_test.wav";
+      wav w( filename );
+      int sampling_freq = 44100;
+      int len = 11 * sampling_freq;
+      vector<double> left(len);
+      for( int i=0;i<len;i++ )
+	left[i] = 30000.0 * cos( 2.0*M_PI*1000.0*i/sampling_freq );
+
+      w.set_channel(1);
+      w.set_sampling_frequency( sampling_freq );
+      w.set_n_bytes(2);
+      w.set_left_data(left);
+
+      if( w.write() )
+	cout << "success to write wav" << endl;
+      else
+	cout << "failed to write wav" << endl;
+    }
 
     return ;
   }

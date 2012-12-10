@@ -205,9 +205,9 @@ namespace speech{
     w->set_channel( read_int( ifs, 2 ) );         // channel
     w->set_sampling_frequency( read_int( ifs ) ); // sampling frequency
 
-    read_int( ifs );  // [Byte / sec]
-    read_int( ifs,2 );  // = Byte / ( n_bytes * channel )
-    w->set_n_bytes( read_int( ifs,2 ) / 8 );  // = bit * n_bytes
+    read_int( ifs );    // data speed [Byte / sec]
+    read_int( ifs, 2 ); // block size [n_bytes * channel])
+    w->set_n_bytes( read_int( ifs,2 ) / 8 );  // bit/sample [8*n_bytes]
   }
 
   // read 'data' chunk
@@ -290,8 +290,118 @@ namespace speech{
     return true;
   }
 
+  // write 4 Byte of bytes Byte
+  void write_int(int write_data, ofstream &ofs, int bytes=4){
+    char c;
+    for( int i=0;i<bytes;i++ ){
+      c = (char)( 0xff & (write_data >> i*8) );
+      ofs.write( &c, 1 );
+    }
+  }
+
+  bool write_fmt(ofstream &ofs, wav *w){
+    ofs.write( "fmt ", 4 );
+    write_int( 16, ofs ); // chunk size
+
+    write_int( 1, ofs, 2 ); // format ID
+    write_int( w->get_channel(), ofs, 2 );
+    write_int( w->get_sampling_frequency(), ofs );
+
+    write_int( w->get_channel() * w->get_n_bytes()
+	       * w->get_sampling_frequency(), ofs );
+    write_int( w->get_n_bytes() * w->get_channel(), ofs, 2 );
+    write_int( 8 * w->get_n_bytes(), ofs, 2 );
+
+    return true;
+  }
+
+  bool write_data(ofstream &ofs, wav *w){
+    ofs.write( "data", 4 );
+    write_int( w->get_channel() * w->get_n_bytes()
+	       * w->get_left_data().size(), ofs );
+    vector<wav_type> left  = w->get_left_data();
+    vector<wav_type> right = w->get_right_data();
+
+    const bool isMono = w->get_channel()==1;
+    const int n_Bytes = w->get_n_bytes();
+    if( !isMono && left.size()!=right.size() ){
+      cerr << "different #sample between left and right" << endl;
+      return false;
+    }
+
+
+    const int maxSample = n_Bytes==1?127:32767;
+    double max = 0.0, tmp, exceedValue = 0.0;
+    bool isExceed = false;
+    union io::sample smp;
+    for( int i=0;i<(int)left.size();i++ ){
+      tmp = left[i];
+      if( !isExceed && fabs(tmp) > maxSample ){
+	isExceed = true;
+	exceedValue = fabs( tmp );
+      }
+
+      if( n_Bytes==1 ){ // 1byte 1channel
+	smp.c[0] = (signed char)tmp;
+	ofs.write( &smp.c[0], sizeof(char) );
+      }else{            // 2byte 1channel
+	smp.s = (short)tmp;
+	ofs.write( &smp.c[0], sizeof(char) );
+	ofs.write( &smp.c[1], sizeof(char) );
+      }
+
+      if( !isMono ){
+	tmp = right[i];
+	if( !isExceed && fabs(tmp) > maxSample ){
+	  isExceed = true;
+	  exceedValue = fabs( tmp );
+	}
+	if( n_Bytes==1 ){ // 1byte 2channel
+	  smp.c[0] = (signed char)tmp;
+	  ofs.write( &smp.c[0], sizeof(char) );
+	}else{            // 2byte 2channel
+	  smp.s = (short)tmp;
+	  ofs.write( &smp.c[0], sizeof(char) );
+	  ofs.write( &smp.c[1], sizeof(char) );
+	}
+      }
+    }
+    if( isExceed ){
+      cerr << "exceed value : "
+	   << exceedValue << " limit : "
+	   << maxSample << endl;
+
+      return false;
+    }
+
+    return true;
+  }
+
+
   bool wav::write(){
-    return false;
+    ofstream ofs( filename.c_str(), ios::out | ios::binary );
+    if( !ofs ){
+      cerr << "cannot open file : " << filename << endl;
+      return false;
+    }
+
+    int filesize = 4 + 16+8 + left.size()*channel*n_bytes+8; // WAVE,fmt,data
+    ofs.write( "RIFF", 4);
+    write_int( filesize, ofs );
+    ofs.write( "WAVE", 4);
+
+    if( !write_fmt(ofs, this) ){
+      cerr << "fmt writing err" << endl;
+      return false;
+    }
+    if( !write_data(ofs, this) ){
+      cerr << "data writing err" << endl;
+      return false;
+    }
+
+    ofs.close();
+
+    return true;
   }
 
 };
