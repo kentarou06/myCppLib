@@ -21,10 +21,8 @@ namespace speech{
   extern vector<wav_type> null_vector;
 
   class io{
-  private:
-    union sample{ short s; char c[2]; };
-
   public:
+    union sample{ short s; char c[2]; };
 
     /* read *.raw
        WARNING
@@ -48,7 +46,7 @@ namespace speech{
 
   public:
     wav();
-    wav(const char* filename);
+    wav(const string &filename);
 
     void set_filename(const string &filename);
     string get_filename();

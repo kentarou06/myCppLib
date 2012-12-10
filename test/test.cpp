@@ -27,7 +27,7 @@ T tmp_TEST(T a, T b){
 
 int main(){
   //  cout << "run test" << endl;
-  //  test_io_cpp();
+    test_io_cpp();
   //  test_fft_cpp();
   //  test_lpc_cpp();
   //  test_frame_cpp();
@@ -35,7 +35,7 @@ int main(){
   //  test_lpc_cpp2();
   //  test_mel_cpp();
   //  test_utility();
-  test_filter();
+    //  test_filter();
   return 0;
 }
 
@@ -376,6 +376,22 @@ void test_io_cpp(){
   char filename[256] = "test00.raw"; //"vaiueo2d.raw";
   int n_Bytes = 1;
   vector<wav_type> left, right;
+
+  if( bool test_wav_class = true ){
+    string filename = "../vaiueo2d.wav";
+    wav w( filename );
+
+    if( w.read() )
+      cout << "success to read wav" << endl;
+    else
+      cout << "failed to read wav" << endl;
+
+    vector<double> v = w.get_left_data();
+    for( int i=0;i<(int)v.size();i++ )
+      cout << i/22050.0 << "\t" << v[i] << endl;
+
+    return ;
+  }
 
   // test for write()
   int T = 10000;

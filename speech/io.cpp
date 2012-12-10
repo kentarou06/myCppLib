@@ -2,7 +2,9 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
 #include "io.h"
+#include "utility.h"
 using namespace std;
 
 namespace speech{
@@ -125,9 +127,10 @@ namespace speech{
     return true;;
   }
 
+
   /* wav */
   wav::wav(){}
-  wav::wav(const char* filename){
+  wav::wav(const string &filename){
     set_filename(filename);
   }
 
@@ -173,9 +176,120 @@ namespace speech{
     return this->right;
   }
 
-  bool wav::read(){
-    return false;
+  // read 4 Byte or bytes Byte
+  int read_int(ifstream &ifs, int bytes=4 ){
+    char c;
+    int r=0;
+    for( int i=0;i<bytes;i++ ){
+      ifs.read( &c, 1);
+      r = r | ( (0xff & c) << i*8 );
+    }
+    return r;
   }
+
+  //  return chunk_size
+  int read_chunk(ifstream &ifs, string &chunk_name){
+    char c[5];
+
+    ifs.read( c, 4 ); // chanc name
+    c[4] = '\0';
+    chunk_name = atos(c);
+
+    return read_int(ifs);
+  }
+
+  // read 'fmt ' chunk
+  void read_fmt(ifstream &ifs, wav *w){
+    read_int( ifs, 2 ); // format ID 1(0x0100)
+
+    w->set_channel( read_int( ifs, 2 ) );         // channel
+    w->set_sampling_frequency( read_int( ifs ) ); // sampling frequency
+
+    read_int( ifs );  // [Byte / sec]
+    read_int( ifs,2 );  // = Byte / ( n_bytes * channel )
+    w->set_n_bytes( read_int( ifs,2 ) / 8 );  // = bit * n_bytes
+  }
+
+  // read 'data' chunk
+  void read_data(ifstream &ifs, wav *w, int size){
+    vector<wav_type> left, right;
+
+    const int n_Bytes = w->get_n_bytes();
+    const bool isMono = w->get_channel()==1;
+    union io::sample smp;
+    bool isLeft = true;
+    while( size>0 ){
+      ifs.read( &smp.c[0], sizeof(smp.c[0]) );
+      size -= sizeof(smp.c[0]);
+
+      if( isMono ){
+	if( n_Bytes==1 ){ // 1byte 1channel
+	  left.push_back( (double)smp.c[0] );
+	}else{            // 2byte 1channel
+	  ifs.read( &smp.c[1], sizeof(smp.c[1]) );
+	  size -= sizeof(smp.c[1]);
+	  left.push_back( (double)smp.s );
+	}
+      }else{
+	if( n_Bytes==1 ){ // 1byte 2channel
+	  if( isLeft )
+	    left.push_back( (double)smp.c[0] );
+	  else
+	    right.push_back( (double)smp.c[0] );
+	}else{            // 2byte 2channel
+	  ifs.read( &smp.c[1], sizeof(smp.c[1]) );
+	  size -= sizeof(smp.c[1]);
+	  if( isLeft )
+	    left.push_back( (double)smp.s );
+	  else
+	    right.push_back( (double)smp.s );
+	}
+	isLeft = !isLeft;
+      }
+    }
+    w->set_left_data(left);
+    w->set_right_data(right);
+  }
+
+  bool wav::read(){
+    ifstream ifs( filename.c_str(), ios::in | ios::binary );
+    if( !ifs ){
+      cerr << "cannot open file : " << filename << endl;
+      return false;
+    }
+
+    char c[5];
+    int filesize;
+
+    c[4] = '\0';
+    ifs.read( c, 4 ); // 'RIFF'
+    filesize = read_int(ifs); // filesize - 8
+    ifs.read( c, 4 ); // 'WAVE'
+
+    string chunk_name;
+    int chunk_size;
+    while( filesize > 0 ){
+      chunk_size = read_chunk(ifs, chunk_name);
+      filesize -= 8;
+      filesize -= chunk_size;
+
+      if( filesize < 0 )
+	break;
+
+      if( chunk_name == "fmt " ){
+	read_fmt(ifs, this);
+      }else if( chunk_name == "data" ){
+	read_data(ifs, this, chunk_size);
+      }else{
+	cerr << "unknown chunk name [" << chunk_name << "]" <<  endl;
+	ifs.seekg( chunk_size, ios::cur );
+      }
+    }
+    ifs.close();
+
+    return true;
+  }
+
   bool wav::write(){
     return false;
   }
