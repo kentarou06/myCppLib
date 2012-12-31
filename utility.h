@@ -10,3 +10,12 @@ using namespace std;
 
 string atos(char* c);
 
+#define TMP_FILE "/tmp/myCppLib_tmp.txt"
+class command{
+ public:
+  static string pwd();
+  /*
+  static void cd(char* c);
+  static void cd(string s);
+  */
+};

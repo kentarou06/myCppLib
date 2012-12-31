@@ -27,14 +27,14 @@ T tmp_TEST(T a, T b){
 
 int main(){
   //  cout << "run test" << endl;
-    test_io_cpp();
+  //    test_io_cpp();
   //  test_fft_cpp();
   //  test_lpc_cpp();
   //  test_frame_cpp();
   //  test_gammatone_cpp();
   //  test_lpc_cpp2();
   //  test_mel_cpp();
-  //  test_utility();
+  test_utility();
     //  test_filter();
   return 0;
 }
@@ -64,11 +64,18 @@ void test_filter(){
 
 void test_utility(){
   cout << "test for utility.h" << endl;
-  char a[100] = "abcedfg hij あいうえお\nかきくけこ";
-  string s = atos(a);
 
-  cout << " char : " << a << endl;
-  cout << " str  : " << s << endl;
+  if( bool test_atos=false ){
+    char a[100] = "abcedfg hij あいうえお\nかきくけこ";
+    string s = atos(a);
+
+    cout << " char : " << a << endl;
+    cout << " str  : " << s << endl;
+  }
+
+  cout << "pwd : " << command::pwd() << endl;
+  command::cd("..");
+  cout << "pwd : " << command::pwd() << endl;
 }
 
 void test_mel_cpp(){

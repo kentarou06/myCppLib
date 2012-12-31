@@ -21,3 +21,41 @@ string atos(char* c){
 
   return r;
 }
+
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+string read_tmp(int number_of_line=-1){
+  ifstream ifs(TMP_FILE);
+  string rtn, buf;
+  if( !ifs ){
+    cerr << "error" << endl;
+    return "";
+  }
+
+  while( !ifs.eof() ){
+    getline( ifs, buf );
+    if( rtn.length() > 0 )
+      rtn += "\n";
+    rtn += buf;
+    number_of_line--;
+    if( !number_of_line )
+      break;
+  }
+  return rtn;
+}
+
+string command::pwd(){
+  system("pwd > " TMP_FILE );
+  return read_tmp(1);
+}
+
+/*  not moved
+void command::cd(string s){
+  string cmd = "cd " + s;
+  system( cmd.c_str() );
+}
+void command::cd(char* c){
+  command::cd( atos(c) );
+}
+*/
