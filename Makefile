@@ -16,3 +16,7 @@ libmylib.so: $(OBJ)
 
 $(ALL_HEADER): $(HEADER)
 	$(shell cat $(HEADER) > $@)
+
+clean:
+	rm $(OBJ)
+	rm *~ speech/*~ test/*~'
