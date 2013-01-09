@@ -72,9 +72,33 @@ void test_utility(){
     cout << " char : " << a << endl;
     cout << " str  : " << s << endl;
   }
+  if( bool test_mkdir=false ){
+    cout << "pwd : " << command::pwd() << endl;
+    command::mkdir( "test_dir" );
+  }
 
-  cout << "pwd : " << command::pwd() << endl;
-  command::mkdir( "test_dir" );
+  if( bool test_setting=true ){
+    setting st = setting("setting_test.txt");
+
+    if( bool write_settings=false ){
+      for( int i=1;i<5;i++ )
+	st.set_string("str_key"+itos(i),"str_value1"+itos(i));
+      for( int i=1;i<7;i++ )
+	st.set_int("int_key"+itos(i), i);
+      st.write();
+    }
+
+    for( int i=1;i<10;i++ ){
+      string key = "int_key"+itos(i);
+      cout << "int : [" << st.get_int(key, -1)
+	   << "] (" << key << ")" << endl;
+    }
+    for( int i=1;i<10;i++ ){
+      string key = "str_key"+itos(i);
+      cout << "str : [" << st.get_string(key, "nothing")
+	   << "] (" << i << ")" << endl;
+    }
+  }
 }
 
 void test_mel_cpp(){
