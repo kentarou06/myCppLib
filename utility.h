@@ -14,8 +14,6 @@ string atos(char* c);
 class command{
  public:
   static string pwd();
-  /*
-  static void cd(char* c);
-  static void cd(string s);
-  */
+  static void mkdir(char* newdir);
+  static void mkdir(string newdir);
 };

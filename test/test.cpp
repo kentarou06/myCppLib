@@ -74,8 +74,7 @@ void test_utility(){
   }
 
   cout << "pwd : " << command::pwd() << endl;
-  command::cd("..");
-  cout << "pwd : " << command::pwd() << endl;
+  command::mkdir( "test_dir" );
 }
 
 void test_mel_cpp(){

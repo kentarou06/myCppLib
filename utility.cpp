@@ -50,12 +50,11 @@ string command::pwd(){
   return read_tmp(1);
 }
 
-/*  not moved
-void command::cd(string s){
-  string cmd = "cd " + s;
-  system( cmd.c_str() );
+void command::mkdir(string newdir){
+  string cmd = "mkdir " + newdir;
+  system(cmd.c_str());
 }
-void command::cd(char* c){
-  command::cd( atos(c) );
+
+void command::mkdir(char* newdir){
+  command::mkdir(atos(newdir));
 }
-*/
