@@ -12,6 +12,6 @@ then
 fi
 
 echo "make test"
-sh ${HOME}/lib/myCppLib/compile_c++_with_mylib.sh test.cpp test
+sh ../compile_c++_with_mylib.sh test.cpp test
 
 
