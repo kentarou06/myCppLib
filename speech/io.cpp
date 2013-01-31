@@ -4,7 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "io.h"
-#include "utility.h"
+#include "../utility.h"
 using namespace std;
 
 namespace speech{

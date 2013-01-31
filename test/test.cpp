@@ -83,8 +83,10 @@ void test_utility(){
     if( bool write_settings=false ){
       for( int i=1;i<5;i++ )
 	st.set_string("str_key"+itos(i),"str_value1"+itos(i));
+      st.set_string("str_key"+itos(5),"");
       for( int i=1;i<7;i++ )
 	st.set_int("int_key"+itos(i), i);
+
       st.write();
     }
 
